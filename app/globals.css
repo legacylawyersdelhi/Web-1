@@ -1,26 +1,201 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  Design tokens — copied 1:1 from the approved static site (website/styles.css).
+  Colours and type follow Apple's web style: SF Pro on Apple devices, Inter elsewhere.
+*/
+@theme {
+  /* Colours */
+  --color-ink: #1d1d1f;
+  --color-ink-2: #6e6e73;
+  --color-ink-3: #86868b;
+  --color-on-dark: #f5f5f7;
+  --color-on-dark-2: #a1a1a6;
+  --color-grey: #f5f5f7;
+  --color-fill: #e8e8ed;
+  --color-line: #d2d2d7;
+  --color-blue: #0071e3;
+  --color-blue-hover: #0077ed;
+  --color-link: #0066cc;
+  --color-nav: rgb(22 22 23 / 0.86);
+  --color-nav-solid: rgb(22 22 23);
+  --color-nav-text: #e8e8ed;
+  --color-hero: #0d0d0e;
+  --color-footer-link: #424245;
+  --color-danger: #b3261e;
+  --color-store-hover: #2c2c2e;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Type scale: size + line-height + letter-spacing + weight travel together */
+  --text-body: 17px;
+  --text-body--line-height: 1.47;
+  --text-body--letter-spacing: -0.022em;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --text-section-title: clamp(32px, 5vw, 56px);
+  --text-section-title--line-height: 1.07;
+  --text-section-title--letter-spacing: -0.015em;
+  --text-section-title--font-weight: 600;
+
+  --text-lede: clamp(19px, 2vw, 24px);
+  --text-lede--line-height: 1.25;
+
+  --text-eyebrow: clamp(17px, 2vw, 21px);
+  --text-eyebrow--font-weight: 600;
+
+  --text-stat: clamp(48px, 6vw, 72px);
+  --text-stat--line-height: 1;
+  --text-stat--letter-spacing: -0.02em;
+  --text-stat--font-weight: 600;
+
+  --text-app-title: clamp(36px, 6vw, 72px);
+  --text-app-title--line-height: 1.05;
+  --text-app-title--letter-spacing: -0.015em;
+  --text-app-title--font-weight: 600;
+
+  --text-card-title: 21px;
+  --text-card-title--line-height: 1.2;
+  --text-card-title--font-weight: 600;
+
+  --text-quote: 19px;
+  --text-quote--line-height: 1.4;
+  --text-quote--font-weight: 500;
+
+  --text-contact: 19px;
+  --text-contact--line-height: 1.4;
+
+  --text-nav-link: 14px;
+
+  --text-nav-brand: 16px;
+  --text-nav-brand--letter-spacing: -0.01em;
+  --text-nav-brand--font-weight: 600;
+
+  --text-menu-link: 28px;
+  --text-menu-link--letter-spacing: -0.015em;
+  --text-menu-link--font-weight: 600;
+
+  --text-menu-link-lg: 32px;
+  --text-menu-link-lg--letter-spacing: -0.015em;
+  --text-menu-link-lg--font-weight: 600;
+
+  --text-label: 12px;
+  --text-label--letter-spacing: 0.04em;
+  --text-label--font-weight: 600;
+
+  --text-disclaimer-title: 32px;
+  --text-disclaimer-title--letter-spacing: -0.015em;
+  --text-disclaimer-title--font-weight: 600;
+
+  /* Sizes and radii */
+  --spacing-nav: 48px;
+  --radius-card: 18px;
+  --radius-store: 12px;
+  --radius-pill: 980px;
+
+  /* Breakpoints (rem to sort with Tailwind's defaults): 480px, 600px, 834px */
+  --breakpoint-xs: 30rem;
+  --breakpoint-menu: 37.5rem;
+  --breakpoint-nav: 52.125rem;
+
+  /* Motion: one easing curve and a few durations used everywhere */
+  --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
+  --ease-apple-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --animate-fade-in: fade-in 0.4s var(--ease-apple);
+  --animate-hero-in: fade-in 0.9s var(--ease-apple);
+  --animate-rise-in: rise-in 0.5s var(--ease-apple-out);
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+  }
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: #ffffff;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Page scroll is locked while the disclaimer or the mobile menu is open */
+  body:has([data-disclaimer="open"]),
+  body:has([data-menu-open="true"]) {
+    overflow: hidden;
+  }
+
+  a {
+    color: var(--color-link);
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Stroke icons: any inline SVG without its own fill */
+  svg:not([fill]) {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  section[id] {
+    scroll-margin-top: var(--spacing-nav);
+  }
+}
+
+/*
+  Scroll reveal. An inline script in <head> adds .reveal-ready (only when motion is allowed),
+  so content is never hidden without JavaScript. RevealObserver sets data-reveal="visible"
+  as each element enters the screen, then removes the attribute once the transition ends.
+  Only opacity and transform animate, so it stays smooth.
+*/
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.8s var(--ease-apple),
+    transform 0.8s var(--ease-apple-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal-ready [data-reveal="visible"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Reduced motion: switch animation off everywhere */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
 }
